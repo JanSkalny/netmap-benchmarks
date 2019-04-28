@@ -1,0 +1,7 @@
+[linux]
+sw-linux if_west=enp0s20f2 if_east=enp0s20f3
+#sw10-linux if_west=enp5s0f0 if_east=enp5s0f1
+
+[bsd]
+sw-bsd ansible_python_interpreter=/usr/local/bin/python if_west=igb2 if_east=igb3 dev_west="igb.2" dev_east="igb.3"
+#sw10-bsd ansible_python_interpreter=/usr/local/bin/python if_west=ixl0 if_east=ixl1 dev_west="ixl.0" dev_east="ixl.1"

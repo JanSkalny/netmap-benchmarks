@@ -1,0 +1,30 @@
+- hosts: bsd
+  tasks:
+  - name: "reboot host"
+    shell: "sleep 5 && shutdown -r now"
+    async: 1
+    poll: 0
+  - name: "wait for host"
+    wait_for_connection:
+      connect_timeout: 20
+      sleep: 5
+      delay: 5
+      timeout: 300
+  - name: "checkout ERPS source code"
+    git:
+      repo:  "https://github.com/JanSkalny/ERPS"
+      dest: "/root/ERPS"
+      update: no
+  - name: "make sure sw bridge is present"
+    make:
+      chdir: /root/ERPS/extras/benchmarks
+      target: all
+  - name: "reconfigure networking: freebsd pcap select"
+    shell: |
+        sleep 5
+        ifconfig {{ if_east }} promisc up
+        ifconfig {{ if_west }} promisc up
+        sysctl dev.{{ dev_east }}.fc=0
+        sysctl dev.{{ dev_west }}.fc=0
+        /root/erps/extras/benchmarks/bridge_select {{ if_east }} {{ if_west }} &
+
